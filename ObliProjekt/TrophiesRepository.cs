@@ -8,6 +8,7 @@
         /// <remarks>This field is intended to store a list of <see cref="Trophy"/> objects.  It is used
         /// internally to manage and track the trophies.</remarks>
         private List<Trophy> _trophies = new List<Trophy>();
+        private int _nextId = 1;
         public TrophiesRepository()
         {
             Add(new Trophy(1, "Champions League", 2020));
@@ -59,30 +60,31 @@
         /// <summary>
         /// Adds a new trophy to the collection.
         /// </summary>
-        /// <param name="obj">The <see cref="Trophy"/> object to add. Must not be <see langword="null"/> and must have a unique <c>Id</c>.</param>
+        /// <param name="trophy">The <see cref="Trophy"/> object to add. Must not be <see langword="null"/> and must have a unique <c>Id</c>.</param>
         /// <returns>The added <see cref="Trophy"/> object.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="obj"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="trophy"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">Thrown if a trophy with the same <c>Id</c> already exists in the collection.</exception>
-        public Trophy Add(Trophy obj)
+        public Trophy Add(Trophy trophy)
         {
-            if (obj == null)
+            if (trophy == null)
             {
-                throw new ArgumentNullException(nameof(obj), "Trophy cannot be null.");
+                throw new ArgumentNullException(nameof(trophy), "Trophy cannot be null.");
             }
-            if (_trophies.Any(t => t.Id == obj.Id))
+            if (_trophies.Any(t => t.Id == trophy.Id))
             {
-                throw new ArgumentException($"A trophy with Id {obj.Id} already exists.");
+                throw new ArgumentException($"A trophy with Id {trophy.Id} already exists.");
             }
             try
             {
-                _trophies.Add(obj);
+                trophy.Id = _nextId++;
+                _trophies.Add(trophy);
             }
             catch (Exception ex)
             {
                 throw;
             }
 
-            return obj;
+            return trophy;
         }
 
         /// <summary>
